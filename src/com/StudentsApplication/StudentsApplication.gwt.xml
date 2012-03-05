@@ -2,14 +2,10 @@
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to="StudentsApplication">
 
-    <!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name='com.google.gwt.user.User'/>
 
-    <!-- Specify the app entry point class.                   -->
     <entry-point class='com.StudentsApplication.client.StudentsApplication'/>
 
-
-    <!-- Specify the app servlets.                   -->
     <servlet path='/StudentsApplicationService' class='com.StudentsApplication.server.StudentsApplicationServiceImpl'/>
 
 </module>

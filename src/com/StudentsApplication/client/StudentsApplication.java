@@ -14,7 +14,7 @@ import java.util.List;
 public class StudentsApplication implements EntryPoint {
 
     public static final int REFRESH_INTERVAL = 5000; //ms
-    public static final int FIRST_ELEMENT_INDEX = 2; //ms
+    public static final int FIRST_ELEMENT_INDEX = 2;
 
     private List<Student> students = new ArrayList<Student>();
 
