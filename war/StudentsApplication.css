@@ -12,14 +12,14 @@ body {
 .list {
     border: 1px solid silver;
     padding: 2px;
-    margin-bottom:6px;
+    margin-bottom: 6px;
 }
 
-.listNumericColumn,.listNumericColumnHeader{
-    width:70px;
+.listNumericColumn, .listNumericColumnHeader {
+    width: 70px;
 }
 
-.listNumericColumn{
+.listNumericColumn {
     text-align: right;
 }
 

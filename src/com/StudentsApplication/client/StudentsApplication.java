@@ -16,7 +16,7 @@ public class StudentsApplication implements EntryPoint {
     public static final int REFRESH_INTERVAL = 5000; //ms
     public static final int FIRST_ELEMENT_INDEX = 2; //ms
 
-    private List<Student> students= new ArrayList<Student>();
+    private List<Student> students = new ArrayList<Student>();
 
     final ToggleButton findButton = new ToggleButton("Show filter", "Hide filter");
 
@@ -108,8 +108,7 @@ public class StudentsApplication implements EntryPoint {
         refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
     }
 
-    private void updateRowsVisible()
-    {
+    private void updateRowsVisible() {
         for (int i = 0; i < students.size(); i++) {
             Student st = students.get(i);
 
@@ -117,13 +116,13 @@ public class StudentsApplication implements EntryPoint {
 
             if (findButton.isDown()) {
                 if (!firstNameFilter.getText().isEmpty())
-                    v = v && st.getFirstName().indexOf(firstNameFilter.getText()) != -1;
+                    v = st.getFirstName().contains(firstNameFilter.getText());
 
                 if (!sureNameFilter.getText().isEmpty())
-                    v = v && st.getSureName().indexOf(sureNameFilter.getText()) != -1;
+                    v = v && st.getSureName().contains(sureNameFilter.getText());
 
                 if (groupFilter.getSelectedIndex() != 0)
-                    v = v &&  groupFilter.getItemText(groupFilter.getSelectedIndex()).equals(Integer.toString(st.getGroupNumber()));
+                    v = v && groupFilter.getItemText(groupFilter.getSelectedIndex()).equals(Integer.toString(st.getGroupNumber()));
             }
             table.getRowFormatter().setVisible(i + FIRST_ELEMENT_INDEX, v);
         }
@@ -144,7 +143,7 @@ public class StudentsApplication implements EntryPoint {
             }
 
             public void onSuccess(Student[] result) {
-                for(Student s : result) {
+                for (Student s : result) {
                     addLine(s);
                 }
                 RootPanel.get("LoadIndicator").setVisible(false);
@@ -152,8 +151,9 @@ public class StudentsApplication implements EntryPoint {
         });
     }
 
-    private  class RowRemover implements ClickHandler {
+    private class RowRemover implements ClickHandler {
         final Student student;
+
         public RowRemover(Student student) {
             this.student = student;
         }
@@ -179,7 +179,7 @@ public class StudentsApplication implements EntryPoint {
         table.setText(row, 0, student.getFirstName());
         table.setText(row, 1, student.getSureName());
         table.setText(row, 2, NumberFormat.getFormat("#,##0.00").format(student.getAvgBall()));
-        table.setText(row, 3, new Integer(student.getGroupNumber()).toString());
+        table.setText(row, 3, Integer.toString(student.getGroupNumber()));
 
         Button removeButton = new Button("x");
         removeButton.addClickHandler(new RowRemover(student));
