@@ -1,0 +1,42 @@
+body {
+    padding: 10px;
+}
+
+/* stock list header row */
+.listHeader {
+    background-color: #2062B8;
+    color: white;
+    font-style: italic;
+}
+
+.list {
+    border: 1px solid silver;
+    padding: 2px;
+    margin-bottom:6px;
+}
+
+.listNumericColumn,.listNumericColumnHeader{
+    width:70px;
+}
+
+.listNumericColumn{
+    text-align: right;
+}
+
+#LoadIndicator {
+    position: absolute;
+    background: yellow;
+    font-weight: bold;
+}
+
+.listNameCollumn {
+    width: 150px;
+}
+
+.listRemoveColumn {
+    width: 25px;
+}
+
+.filterElement {
+    width: 100%;
+}
