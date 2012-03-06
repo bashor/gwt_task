@@ -9,7 +9,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StudentsApplication implements EntryPoint {
 
@@ -19,9 +21,9 @@ public class StudentsApplication implements EntryPoint {
     private List<Student> students = new ArrayList<Student>();
 
     final ToggleButton findButton = new ToggleButton("Show filter", "Hide filter");
-
-    final TextBox firstNameFilter = new TextBox();
-    final TextBox sureNameFilter = new TextBox();
+    final MultiWordSuggestOracle firstNameOracle = new MultiWordSuggestOracle();
+    final SuggestBox firstNameFilter = new SuggestBox(firstNameOracle);
+    final ListBox sureNameFilter = new ListBox();
 
     final ListBox groupFilter = new ListBox();
 
@@ -40,13 +42,15 @@ public class StudentsApplication implements EntryPoint {
 
         firstNameFilter.setStyleName("filterElement");
         sureNameFilter.setStyleName("filterElement");
-
+        sureNameFilter.addItem("All");
         groupFilter.addItem("All");
-        groupFilter.addItem("1");
-        groupFilter.addItem("2");
-        groupFilter.addItem("3");
-        groupFilter.addItem("4");
-        groupFilter.addItem("5");
+
+        ChangeHandler FilterFieldChangedHandler = new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                updateRowsVisible();
+            }
+        };
 
         firstNameFilter.addKeyUpHandler(new KeyUpHandler() {
             @Override
@@ -54,20 +58,8 @@ public class StudentsApplication implements EntryPoint {
                 updateRowsVisible();
             }
         });
-
-        sureNameFilter.addKeyUpHandler(new KeyUpHandler() {
-            @Override
-            public void onKeyUp(KeyUpEvent event) {
-                updateRowsVisible();
-            }
-        });
-
-        groupFilter.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                updateRowsVisible();
-            }
-        });
+        sureNameFilter.addChangeHandler(FilterFieldChangedHandler);
+        groupFilter.addChangeHandler(FilterFieldChangedHandler);
 
         RootPanel.get().add(findButton);
 
@@ -99,13 +91,14 @@ public class StudentsApplication implements EntryPoint {
 
         RootPanel.get().add(table);
 
-        Timer refreshTimer = new Timer() {
-            @Override
-            public void run() {
-                refreshList();
-            }
-        };
-        refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+//        Timer refreshTimer = new Timer() {
+//            @Override
+//            public void run() {
+//                refreshList();
+//            }
+//        };
+//        refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+        refreshList();
     }
 
     private void updateRowsVisible() {
@@ -118,8 +111,8 @@ public class StudentsApplication implements EntryPoint {
                 if (!firstNameFilter.getText().isEmpty())
                     v = st.getFirstName().contains(firstNameFilter.getText());
 
-                if (!sureNameFilter.getText().isEmpty())
-                    v = v && st.getSureName().contains(sureNameFilter.getText());
+                if (sureNameFilter.getSelectedIndex() != 0)
+                    v = v && st.getSureName().equals(sureNameFilter.getItemText(sureNameFilter.getSelectedIndex()));
 
                 if (groupFilter.getSelectedIndex() != 0)
                     v = v && groupFilter.getItemText(groupFilter.getSelectedIndex()).equals(Integer.toString(st.getGroupNumber()));
@@ -143,9 +136,28 @@ public class StudentsApplication implements EntryPoint {
             }
 
             public void onSuccess(Student[] result) {
+                Set<String> firstNames = new HashSet<String>();
+                Set<String> sureNames = new HashSet<String>();
+                Set<String> groups = new HashSet<String>();
                 for (Student s : result) {
                     addLine(s);
+
+                    //TODO: fix this, it's don't work when continues update
+                    if (!firstNames.contains(s.getFirstName())) {
+                        firstNames.add(s.getFirstName());
+                        firstNameOracle.add(s.getFirstName());
+                    }
+                    if (!sureNames.contains(s.getSureName())) {
+                        sureNames.add(s.getSureName());
+                        sureNameFilter.addItem(s.getSureName());
+                    }
+                    String groupNumberAsString = Integer.toString(s.getGroupNumber());
+                    if (!groups.contains(groupNumberAsString)) {
+                        groups.add(groupNumberAsString);
+                        groupFilter.addItem(groupNumberAsString);
+                    }
                 }
+
                 RootPanel.get("LoadIndicator").setVisible(false);
             }
         });

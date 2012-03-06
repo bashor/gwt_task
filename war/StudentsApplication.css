@@ -29,7 +29,7 @@ body {
     font-weight: bold;
 }
 
-.listNameCollumn {
+.listNameCollumn, .gwt-SuggestBoxPopup .item{
     width: 150px;
 }
 
@@ -39,4 +39,21 @@ body {
 
 .filterElement {
     width: 100%;
+}
+
+.gwt-SuggestBoxPopup
+{
+    cursor                       :    pointer;
+    border                       :    1px solid #666;
+    border-top                   :    0;
+    background-color             :    #fff;
+
+}
+.gwt-SuggestBoxPopup .item
+{
+    border                       :    1px dotted #aaa;
+}
+.gwt-SuggestBoxPopup .item-selected
+{
+    background-color             :    #ffc;
 }
